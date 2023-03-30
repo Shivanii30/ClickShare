@@ -14,11 +14,6 @@ def home(request):
     return render(request,'home.html')
 
 
-
-
-
-
-
 class Handle_Uploaded_Files(APIView):
     parser_classes = [MultiPartParser]
     def post(self , request):
