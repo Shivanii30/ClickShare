@@ -13,6 +13,9 @@ from rest_framework.permissions import IsAuthenticated
 def home(request):
     return render(request,'home.html')
 
+def download(request, uid):
+    return render(request, 'download.html',context = {'uid':uid})
+
 
 class Handle_Uploaded_Files(APIView):
     parser_classes = [MultiPartParser]
@@ -32,7 +35,7 @@ class Handle_Uploaded_Files(APIView):
             
             return Response({
                 'status' : 400,
-                'message' : 'somethign went wrong',
+                'message' : 'something went wrong',
                 'data'  : serializer.errors
             })
         except Exception as e:
