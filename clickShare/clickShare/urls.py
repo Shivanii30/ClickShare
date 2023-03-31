@@ -23,6 +23,7 @@ from home.views import *
 
 urlpatterns = [
     path('',home),
+    path('download/<uid>/',download),
     path('handle/',Handle_Uploaded_Files.as_view()),
     path('admin/', admin.site.urls),
     # path('',include("home.urls")),

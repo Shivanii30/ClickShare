@@ -47,7 +47,7 @@
         body {
             max-width: 28em;
             margin: 0 auto;
-            background-color: #03a9f4;
+            background: url('background.jpg')no-repeat;
         }
 
         .background {
@@ -159,9 +159,9 @@
                 .then(result => {
                     console.log(result)
 
-                    url = `http://127.0.0.1:8000/download/${result.data.folder}`
+                    url = `http://127.0.0.1:8000/download/${result.data.folder}` 
+  
 
-                    document.getElementById('btn').style.display = '';df -h
                     
 
                 })
@@ -173,13 +173,14 @@
         
          
             /* Copy the text inside the text field */
+            copyText.select();
+            copyText.setSelectRange(0, 99999);
             navigator.clipboard.writeText(url);
 
-            /* Alert the copied text */
-            alert("Copied the text: " + url);
-        }
-    </script>
+            alert("Copied the text:" +url);
 
-</body>
+        }
+      </script>
+      </body>  
 
 </html>
