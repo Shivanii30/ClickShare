@@ -6,12 +6,38 @@ from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
+from django.conf import settings
+from django.core.mail import send_mail
+
 
 
 
 
 def home(request):
     return render(request,'home.html')
+
+
+
+def sendEmail(request):
+    if request.method == "POST":
+        try:
+            email = request.POST.get("email")
+            subject="Your account needs to be verified"
+            message=f'Demo Email Sent'
+            email_from= settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            send_mail(subject,message,email_from,recipient_list)
+            print(email,recipient_list,subject)
+            return render(request,'success.html')
+        except Exception as e:
+            print(e)
+    
+                
+    
+    
+    email = request.POST.get("email")
+    print(email)
+    return render(request,'email.html')
 
 def download(request, uid):
     return render(request, 'download.html',context = {'uid':uid})

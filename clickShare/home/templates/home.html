@@ -52,7 +52,11 @@
 
       /**
  * Page Styles
- */
+ */   button,center{
+      padding: 0;
+      width: 100%;
+      }
+      
       html {
         padding: 3vh 0 0;
       }
@@ -72,6 +76,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+
+      .btn{
+        width: 100%;
       }
 
       .clipboard {
@@ -105,6 +113,11 @@
         display: block;
         margin-top: 100px;
         padding: 10px;
+      }
+
+      .card-body{
+        padding: 0;
+
       }
     </style>
   </head>
@@ -141,7 +154,10 @@
       </div>
     </div>
 
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+      </body>
+
+
+      <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.3/filepond.min.js"
@@ -193,9 +209,9 @@
       function copyClip() {
         console.log("copy clip function");
         navigator.clipboard.writeText(url);
-
+        window.location.href = url;
         alert("Copied the text:" + url);
       }
     </script>
-  </body>
+
 </html>
