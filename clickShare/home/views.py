@@ -16,6 +16,9 @@ from django.core.mail import send_mail
 def home(request):
     return render(request,'home.html')
 
+def error(request):
+    return render(request,'error.html')
+
 
 
 def sendEmail(request):
@@ -31,12 +34,12 @@ def sendEmail(request):
             return render(request,'success.html')
         except Exception as e:
             print(e)
+            return render(request,'error.html')
     
-                
+    # return render(request,'error.html')
     
     
-    email = request.POST.get("email")
-    print(email)
+    
     return render(request,'email.html')
 
 def download(request, uid):

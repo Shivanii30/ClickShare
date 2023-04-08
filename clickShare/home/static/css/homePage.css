@@ -1,0 +1,96 @@
+.filepond--drop-label {
+  color: #000000;
+}
+
+.filepond--label-action {
+  -webkit-text-decoration-color: #babdc0;
+  text-decoration-color: #babdc0;
+}
+
+.filepond--panel-root {
+  border: 2px solid grey;
+  border-radius: 2em;
+  background-color: transparent;
+  height: 1em;
+}
+
+.filepond--item-panel {
+  background-color: #595e68;
+}
+
+.filepond--drip-blob {
+  background-color: #8793a5;
+}
+
+.card-body{
+  padding: 0 !important;
+}
+
+/**
+* Page Styles
+*/
+button,
+center {
+  padding: 0;
+  width: 100%;
+}
+
+html {
+  padding: 3vh 0 0;
+}
+
+body {
+  max-width: 28em;
+  margin: 0 auto;
+}
+.image {
+  background-image: url("../image.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: auto;
+}
+
+.background {
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  width: 100%;
+}
+
+.clipboard {
+  border: 0;
+  padding: 15px;
+  border-radius: 3px;
+  background-image: linear-gradient(135deg, #fdeb71 10%, #f8d800 100%);
+  cursor: pointer;
+  color: #04048c;
+  font-family: "Karla", sans-serif;
+  font-size: 16px;
+  position: relative;
+  top: 0;
+  transition: all 0.2s ease;
+}
+
+body .clipboard:hover {
+  top: 2px;
+}
+
+body p {
+  font-weight: 700;
+}
+
+.customContainer {
+  margin: auto;
+  box-sizing: border-box;
+  background: rgba(70, 68, 68, 0.25);
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 0 20px rgb(51, 50, 51);
+  display: block;
+  margin-top: 100px;
+  padding: 10px;
+}

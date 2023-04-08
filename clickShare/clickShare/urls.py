@@ -26,6 +26,7 @@ urlpatterns = [
     path('download/<uid>/',download),
     path('handle/',Handle_Uploaded_Files.as_view()),
     path('email/',sendEmail),
+    path('error/',error),
     path('admin/', admin.site.urls),
     # path('',include("home.urls")),
 ]
