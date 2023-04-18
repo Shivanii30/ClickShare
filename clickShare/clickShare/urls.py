@@ -22,11 +22,12 @@ from django.conf.urls.static import static
 from home.views import *
 
 urlpatterns = [
-    path('',home),
+    path('',home,name="home"),
     path('download/<uid>/',download),
     path('handle/',Handle_Uploaded_Files.as_view()),
     path('email/',sendEmail),
     path('error/',error),
+    path('contact/',contact),
     path('admin/', admin.site.urls),
     # path('',include("home.urls")),
 ]

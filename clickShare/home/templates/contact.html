@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/x-icon" href="tab.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Fetch-Send and Retrieve </title>
+    <link rel="stylesheet" href="{% static 'css/swifthome.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <h1>TaylorSwiftShare</h1>
+            <main>
+                <h3>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="">About</a>
+                    <a href="">Contact</a>
+                </h3>
+            </main>
+        </nav>
+
+        <div class="card">
+            <span class="title">Get In Touch</span>
+            <form class="form" method="post">
+                {% csrf_token %}
+                <div class="group">
+                    <input placeholder="‎" type="text" required="">
+                    <label for="name">Name</label>
+                </div>
+                <div class="group">
+                    <input placeholder="‎" type="email" id="email" name="email" required="">
+                    <label for="email">Email</label>
+                </div>
+                <div class="group">
+                    <textarea placeholder="‎" id="comment" name="comment" rows="5" required=""></textarea>
+                    <label for="comment">Comment</label>
+                </div>
+
+
+                <button type="submit"> 
+                    <div class="svg-wrapper-1">
+                        <div class="svg-wrapper">
+                            <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 0h24v24H0z" fill="none"></path>
+                                <path
+                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <span>Send</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="contact-img">
+            <img src="{% static 'svg/contact.svg' %}" class="contact-img" alt="">
+        </div>
+
+
+    </div>
+    </div>
+
+</body>
+
+</html>

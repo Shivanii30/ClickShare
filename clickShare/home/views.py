@@ -13,6 +13,29 @@ from django.core.mail import send_mail
 
 
 
+
+
+def contact(request):
+    if request.method == "POST":
+        try:
+            email = request.POST.get("email")
+            subject="Your Feedback was appreciated"
+            message=f'Meow Meow'
+            email_from= settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            send_mail(subject,message,email_from,recipient_list)
+            print(email,recipient_list,subject)
+            return render(request,'success.html')
+        except Exception as e:
+            print(e)
+            return render(request,'error.html')
+    
+    
+    
+    
+    
+    return render(request,'contact.html')
+
 def home(request):
     return render(request,'home.html')
 
@@ -25,12 +48,12 @@ def sendEmail(request):
     if request.method == "POST":
         try:
             email = request.POST.get("email")
-            subject="Your account needs to be verified"
-            message=f'Demo Email Sent'
+            message=request.POST.get("comment")
+            subject="Appreciation for Feedback"
             email_from= settings.EMAIL_HOST_USER
             recipient_list = [email]
             send_mail(subject,message,email_from,recipient_list)
-            print(email,recipient_list,subject)
+            print(email,recipient_list,subject,message)
             return render(request,'success.html')
         except Exception as e:
             print(e)
