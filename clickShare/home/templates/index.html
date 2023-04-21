@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click Share</title>
+
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Raleway:ital@0;1&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Playfair Display', serif;
+            font-family: 'Raleway', sans-serif;
+            box-sizing: border-box;
+            text-decoration: none;
+            scroll-behavior: smooth;
+            color: rgb(245, 245, 245);
+        }
+
+        body {
+            background-color: #6a00b1;
+            height: inherit;
+        }
+
+        .center {
+            text-align: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: blueviolet;
+            margin: 5rem 2rem 5rem 2rem;
+            border-radius: 12px;
+            height: 50rem;
+            box-shadow: 0 0 10px 1px rgba(0, 0, 0, .25);
+            backdrop-filter: blur(15px);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+
+        nav {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            top: 0%;
+            z-index: 10;
+
+        }
+
+
+        main {
+            width: 70%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        main a {
+            margin: 2rem;
+        }
+
+        a:hover {
+            border-bottom: 2px solid rgb(0, 100, 214);
+        }
+
+        .home-img {
+            height: 35rem;
+        }
+
+        .contact-img {
+            position: absolute;
+            right: 100px;
+            top: 60px;
+
+        }
+
+
+        .contents {
+            display: flex;
+            margin-top: 2px;
+            justify-content: space-evenly;
+            margin-top: 60px;
+        }
+
+
+
+        .info {
+            margin-top: 10%;
+            width: 50%;
+            padding: 2px;
+        }
+
+
+        .card {
+            background-color: transparent;
+            border-radius: 10px;
+            padding: 20px;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 200px;
+            left: 240px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            color: rgb(218, 199, 199);
+        }
+
+        .form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .group {
+            position: relative;
+        }
+
+        .form .group label {
+            font-size: 19px;
+            color: rgb(0, 17, 17);
+            position: absolute;
+            top: -10px;
+            left: 10px;
+
+            background-color: #fff;
+            transition: all .3s ease;
+            border-radius: 16px;
+        }
+
+        .form .group input,
+        .form .group textarea {
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            outline: 0;
+            width: 100%;
+            background-color: #8565b9;
+        }
+
+        .form .group input:placeholder-shown+label,
+        .form .group textarea:placeholder-shown+label {
+            top: 10px;
+            background-color: transparent;
+        }
+
+        .form .group input:focus,
+        .form .group textarea:focus {
+            border-color: #3366cc;
+        }
+
+        .form .group input:focus+label,
+        .form .group textarea:focus+label {
+            top: -10px;
+            left: 10px;
+            background-color: #fff;
+            color: #3366cc;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form .group textarea {
+            resize: none;
+            height: 100px;
+        }
+
+
+
+        button {
+            font-family: inherit;
+            font-size: 28px;
+            background: #a971cd;
+            color: white;
+            padding: 0.7em 1em;
+            padding-left: 0.9em;
+            display: flex;
+            align-items: center;
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        button span {
+            display: block;
+            margin-left: 0.3em;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button svg {
+            display: block;
+            transform-origin: center center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover .svg-wrapper {
+            animation: fly-1 0.6s ease-in-out infinite alternate;
+        }
+
+        button:hover svg {
+            transform: translateX(1.2em) rotate(45deg) scale(1.1);
+        }
+
+        button:hover span {
+            transform: translateX(5em);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .content {
+            display: flex;
+        }
+
+        .illustration {
+            width: 30%;
+            padding: 10px;
+        }
+
+        label {
+            color: black;
+        }
+
+        .image {
+            width: 100%;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn>span {
+            width: 100%;
+            text-align: center;
+        }
+
+        .box {
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .downloadbtn{
+            margin: 2px;
+            width: 100%;
+        }
+
+        .download{
+            width: 100%;
+            margin: 2px;;
+        }
+
+        span{
+            text-align: center;
+        }
+
+
+        @keyframes fly-1 {
+            from {
+                transform: translateY(0.1em);
+            }
+
+            to {
+                transform: translateY(-0.1em);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <h1>TaylorSwiftShare</h1>
+            <main>
+                <h3>
+                    <a href="">Home</a>
+                    <a href="">About</a>
+                    <a href="{% url 'contact' %}">Contact</a>
+                </h3>
+            </main>
+        </nav>
+
+
+        <div class="box">
+            <div class="illustration">
+                <div class="text-center">
+                    <img src="/media/image/undraw.svg" class="image" style="height: 200px" />
+                    <h1></h1>
+                </div>
+                <input type="file" class="my-pond mt-4" multiple name="filepond" />
+
+                <div class="text-center">
+                    <button class="btn" onclick="upload_file()">
+                        <span>Upload File</span>
+                    </button>
+
+                    <div class="carad mt-3" id="btn" style="display: none">
+                        <center>
+                            <button onclick="copyClip()" class="clipboard download">
+                                <span>Donwload File</span>
+                            </button>
+                        </center>
+    
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="svgg">
+                <img src="" alt="">
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+</body>
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.3/filepond.min.js"
+    integrity="sha512-AuMJiyTn/5k+gog21BWPrcoAC+CgOoobePSRqwsOyCSPo3Zj64eHyOsqDev8Yn9H45WUJmzbe9RaLTdFKkO0KQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+
+
+<script>
+    
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+
+    );
+
+    const pond = FilePond.create(
+        document.querySelector('.my-pond')
+    );
+
+    var url = null
+
+    function upload_file() {
+        var files = pond.getFiles()
+
+        var formdata = new FormData()
+
+        for (var i = 0; i < files.length; i++) {
+            formdata.append('files', files[i].file)
+        }
+
+        fetch('/handle/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': "{{csrf_token}}"
+                },
+                body: formdata
+            }).then(res => res.json())
+            .then(result => {
+                console.log(result)
+
+                url = `http://127.0.0.1:8000/download/${result.data.folder}`
+
+                document.getElementById('btn').style.display = ''
+                
+
+            })
+
+    }
+
+    function copyClip() {
+        console.log('dd')
+    
+     
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(url);
+
+        /* Alert the copied text */
+        alert("Copied the text: " + url);
+          window.location.href = url;
+
+    
+    }
+
+    
+</script>
+
+
+</html>
