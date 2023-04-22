@@ -23,9 +23,10 @@ def contact(request):
         try:
             email = request.POST.get("email")
             subject="Your Feedback was appreciated"
-            message=f'Meow Meow'
+            message=request.POST.get("comment")
             email_from= settings.EMAIL_HOST_USER
             recipient_list = [email]
+            print(message)
             send_mail(subject,message,email_from,recipient_list)
             print(email,recipient_list,subject)
             return render(request,'success.html')
@@ -39,8 +40,7 @@ def contact(request):
     
     return render(request,'contact.html')
 
-def home(request):
-    return render(request,'home.html')
+
 
 def error(request):
     return render(request,'error.html')
@@ -51,13 +51,14 @@ def sendEmail(request):
     if request.method == "POST":
         try:
             email = request.POST.get("email")
-            message=request.POST.get("comment")
             subject="Appreciation for Feedback"
+            message = "Demo Email"
             email_from= settings.EMAIL_HOST_USER
             recipient_list = [email]
+            print(message)
             send_mail(subject,message,email_from,recipient_list)
             print(email,recipient_list,subject,message)
-            return render(request,'success.html')
+            # return render(request,'success.html')
         except Exception as e:
             print(e)
             return render(request,'error.html')
@@ -66,7 +67,7 @@ def sendEmail(request):
     
     
     
-    return render(request,'email.html')
+    return render(request,'error.html')
 
 def download(request, uid):
     return render(request, 'download.html',context = {'uid':uid})

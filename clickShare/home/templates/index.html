@@ -74,7 +74,7 @@
         }
 
         a:hover {
-            border-bottom: 2px solid rgb(0, 100, 214);
+            border-bottom: 2px solid rgb(250, 0, 0);
         }
 
         .home-img {
@@ -366,6 +366,12 @@
 
         var formdata = new FormData()
 
+        if(files.length == 0 ){
+            alert("Please Upload Atleast one File")
+        }
+        else{
+
+        
         for (var i = 0; i < files.length; i++) {
             formdata.append('files', files[i].file)
         }
@@ -386,6 +392,7 @@
                 
 
             })
+        }
 
     }
 

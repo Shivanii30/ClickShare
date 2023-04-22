@@ -177,6 +177,13 @@ a:hover{
     transition: all 0.2s;
   }
   
+
+
+
+.customBox{
+  display: flex;
+}
+
   button span {
     display: block;
     margin-left: 0.3em;
@@ -215,4 +222,17 @@ a:hover{
     }
   }
   
+
+
+@media screen and (min-width:768px){
+  .card{
+    display: block;
+  }
+}
+@media screen and (max-width:500px) {
+  .contact-img {
+      display: none;
+  }
+}
   
+
