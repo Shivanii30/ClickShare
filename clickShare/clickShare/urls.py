@@ -15,15 +15,15 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
-
 from home.views import *
 
 urlpatterns = [
-    # path('',home,name="home"),
-    path('',index,name="index"),
+        
+    path('', index),
+    # path('',index,name="index"),
     path('download/<uid>/',download),
     path('handle/',Handle_Uploaded_Files.as_view()),
     path('email/',sendEmail),
