@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="shortcut icon" type="image/svg+xml" href="{% static 'tab.svg' %}">
+    <link rel="shortcut icon" type="image/svg+xml" href="media/image/tab.svg">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Swift Share - Send and Save</title>
 
@@ -295,7 +296,7 @@ button:active {
             <h1>Swift Share</h1>
             <main>
                 <h3>
-                    <a href="#">Home</a>
+                    <a href="{% url 'index' %}">Home</a>
                     <a href="{% url 'about' %}">About</a>
                     <a href="{% url 'contact' %}">Contact</a>
                 </h3>

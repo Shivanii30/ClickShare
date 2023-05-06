@@ -22,7 +22,9 @@ from home.views import *
 
 urlpatterns = [
         
-    path('', index),
+    #path('', index),
+    path('',index, name='index'),
+    path('about/',about, name='about'),
     # path('',index,name="index"),
     path('download/<uid>/',download),
     path('handle/',Handle_Uploaded_Files.as_view()),

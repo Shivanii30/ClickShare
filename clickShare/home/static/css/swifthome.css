@@ -12,11 +12,11 @@
 }
 
 body{
-    background-color: #6a00b1;
+  background: linear-gradient(to bottom right, #6c177d, #bb4488);
 }
 
 .container{
-    background-color: blueviolet;
+  background: linear-gradient(to bottom right,#832183 ,#e67a91 );
     margin: 5rem 2rem 5rem 2rem;
     border-radius: 12px;
     height:50rem;
@@ -25,7 +25,9 @@ body{
 }
 
 h1{
-    color: rgb(221, 84, 255);
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -52,7 +54,7 @@ main a{
 }
 
 a:hover{
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid rgb(165, 107, 107);
 }
 
 .home-img{
@@ -84,7 +86,7 @@ a:hover{
 
 
 .card {
-    background-color: blueviolet;
+    background-color: transparent;
     border-radius: 10px;
     padding: 20px;
     width: 500px;
@@ -177,13 +179,6 @@ a:hover{
     transition: all 0.2s;
   }
   
-
-
-
-.customBox{
-  display: flex;
-}
-
   button span {
     display: block;
     margin-left: 0.3em;
@@ -222,17 +217,4 @@ a:hover{
     }
   }
   
-
-
-@media screen and (min-width:768px){
-  .card{
-    display: block;
-  }
-}
-@media screen and (max-width:500px) {
-  .contact-img {
-      display: none;
-  }
-}
   
-

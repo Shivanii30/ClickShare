@@ -45,6 +45,9 @@ def contact(request):
 def error(request):
     return render(request,'error.html')
 
+def about(request):
+    return render(request, 'about.html')
+
 
 
 def sendEmail(request):
