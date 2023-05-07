@@ -37,24 +37,29 @@
       background-color: #7f8a9a;
     }
 
-    center > a > .clipboard{
+    center>a>.clipboard {
       text-decoration: none;
     }
+
     /**
  * Page Styles
  */
     html {
       padding: 3vh 0 0;
+      height: 100%;
+
     }
 
     body {
       max-width: 28em;
+      height: 100%;
       margin: 0 auto;
-      background-color: #03a9f4;
+      background: linear-gradient(to bottom right, #832183, #e67a91);
+      background-repeat: no-repeat
     }
-    
-    center{
-      color: #04048c;
+
+    center {
+      color: #101061;
     }
 
     .background {
@@ -88,6 +93,136 @@
     body p {
       font-weight: 700;
     }
+
+
+
+
+
+
+    .button {
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      background: none;
+      color: #0f1923;
+      cursor: pointer;
+      position: relative;
+      padding: 8px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all .15s ease;
+    }
+
+    .button::before,
+    .button::after {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 0;
+      left: 0;
+      height: calc(50% - 5px);
+      border: 1px solid #7D8082;
+      transition: all .15s ease;
+    }
+
+    .button::before {
+      top: 0;
+      border-bottom-width: 0;
+    }
+
+    .button::after {
+      bottom: 0;
+      border-top-width: 0;
+    }
+
+    .button:active,
+    .button:focus {
+      outline: none;
+    }
+
+    .button:active::before,
+    .button:active::after {
+      right: 3px;
+      left: 3px;
+    }
+
+    .button:active::before {
+      top: 3px;
+    }
+
+    .button:active::after {
+      bottom: 3px;
+    }
+
+    .button_lg {
+      position: relative;
+      display: block;
+      padding: 10px 20px;
+      color: #fff;
+      background-color: #0f1923;
+      overflow: hidden;
+      box-shadow: inset 0px 0px 0px 1px transparent;
+    }
+
+    .button_lg::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 2px;
+      background-color: #0f1923;
+    }
+
+    .button_lg::after {
+      content: '';
+      display: block;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 4px;
+      height: 4px;
+      background-color: #0f1923;
+      transition: all .2s ease;
+    }
+
+    .button_sl {
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: -1px;
+      left: -8px;
+      width: 0;
+      background-color: #ff4655;
+      transform: skew(-15deg);
+      transition: all .2s ease;
+    }
+
+    .button_text {
+      position: relative;
+    }
+
+    .button:hover {
+      color: #0f1923;
+    }
+
+    .button:hover .button_sl {
+      width: calc(100% + 15px);
+    }
+
+    .button:hover .button_lg::after {
+      background-color: #fff;
+    }
+
+    .download {
+      text-decoration: none;
+      color: white;
+      height: 100px;
+    }
   </style>
 </head>
 
@@ -105,7 +240,7 @@
 
   <div class="text-center">
 
-    <img src="/media/image/download.svg" class="img-fluid img-responsive" style="height: 200px;">
+    <img src="/media/image/Folder-pana.svg" class="img-fluid img-responsive" style="height: 500px;">
   </div>
 
 
@@ -114,35 +249,74 @@
 
 
       <div class="background">
-        <center>
-          <a href="/media/zip/{{uid}}.zip" class="clipboard">Download Files</a>
-        </center>
+        <button class="button" id="showDisplay">
+          <span class="button_lg" style="width: 300px; height:50px;">
+            <span class="button_sl"></span>
+            <center>
+              <span class="button_text span_size"><a href="/media/zip/{{uid}}.zip" class="download">Download
+                  Files</a></span>
+            </center>
+          </span>
+        </button>
+
+
+
+        
 
         <!-- Email to  be Updated -->
         <!-- Clipboard data to be send to backend [js ke clipboard se python ke views tak]  -->
         <!-- <center>
           <a href="http://127.0.0.1:8000/email" class="btn btn-primary">Email Files</a>
         </center> -->
-
+        <!-- 
         <center>
-          <a href="/media/zip/{{uid}}.zip" class="clipboard">Share Files</a>
-        </center>
-        
+          <a href="/media/zip/{{uid}}.zip" class="clipboard">Download Files</a>
+        </center> -->
+
         <br>
-        
+
+
+        <button class="button" style="display: none;" id="showww">
+          <a href="{% url 'index' %}" class="download">
+
+          
+          <span class="button_lg" style="width: 300px; height:50px;">
+            <span class="button_sl"></span>
+            <center>
+              <span class="button_text span_size download">Upload Another File</span>
+            </center>
+          </span>
+        </a>
+        </button>
 
       </div>
-      
+
 
     </div>
+
+
   </div>
+
+
   </div>
+
+
 
 
   <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
 
 
   <script>
+
+
+    let button = document.getElementById("showDisplay");
+    button.addEventListener('click',()=>{
+      let btn = document.getElementById("showww");
+      btn.style.display = "";
+      console.log("Tr")
+    })
+
+
     $(function () {
       $.fn.filepond.registerPlugin(FilePondPluginImagePreview,);
       $('.my-pond').filepond();
