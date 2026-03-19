@@ -1,300 +1,287 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
     {% load static %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="shortcut icon" type="image/svg+xml" href="media/image/tab.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swift Share-Send and Save</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swift Share – Contact</title>
 
-    <script src = "{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Raleway:ital@0;1&display=swap');
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            scroll-behavior: smooth;
+        }
 
-*{
-    margin: 0;
-    padding: 0;
-    font-family: 'Playfair Display', serif;
-    font-family: 'Raleway', sans-serif;
-    box-sizing: border-box;
-    text-decoration: none;
-    scroll-behavior: smooth;
-    color: rgb(245, 245, 245);
-}
+        :root {
+            --bg-from: #3b0764;
+            --bg-to: #7e1d6e;
+            --card-bg: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.15);
+            --accent: #e879f9;
+            --text-primary: #f5f3ff;
+            --text-muted: #c4b5fd;
+            --input-bg: rgba(0,0,0,0.2);
+            --input-border: rgba(255,255,255,0.12);
+            --input-focus: rgba(232,121,249,0.5);
+            --btn-from: #d8b4fe;
+            --btn-to: #9f5cf6;
+        }
 
-body{
-  background: linear-gradient(to bottom right, #6c177d, #bb4488);
-}
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-from) 0%, #5b1a6b 45%, var(--bg-to) 100%);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-.container{
-  background: linear-gradient(to bottom right,#832183 ,#e67a91 );
-    margin: 5rem 2rem 5rem 2rem;
-    border-radius: 12px;
-    height:50rem;
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, .25);
-    backdrop-filter: blur(15px);
-}
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(192,38,211,0.3), transparent 70%);
+            top: -100px; left: -100px;
+            animation: drift1 12s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(109,40,217,0.25), transparent 70%);
+            bottom: -80px; right: -80px;
+            animation: drift2 15s ease-in-out infinite alternate;
+        }
+        @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px,80px); } }
+        @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-50px,-60px); } }
 
-h1{
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-}
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 3rem;
+            background: rgba(59,7,100,0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .nav-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #f5f3ff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            font-size: 0.95rem; font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent); border-radius: 2px;
+            transition: width 0.25s ease;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
 
+        /* PAGE */
+        .hero {
+            position: relative; z-index: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: calc(100vh - 72px);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
 
-nav{
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0%;
-    z-index: 10;
-    
-}
+        .eyebrow {
+            font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 0.8rem;
+            opacity: 0; animation: fadeUp 0.5s 0.1s forwards;
+        }
 
+        .page-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            line-height: 1.1; margin-bottom: 0.8rem;
+            opacity: 0; animation: fadeUp 0.5s 0.2s forwards;
+        }
+        .page-title em {
+            font-style: italic;
+            background: linear-gradient(90deg, var(--accent), #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-main{
-    width: 70%;
-    display: flex;
-    justify-content: flex-end;
-}
+        .page-subtitle {
+            font-size: 1rem; color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            opacity: 0; animation: fadeUp 0.5s 0.3s forwards;
+        }
 
-main a{
-    margin: 2rem;
-}
+        /* FORM CARD */
+        .form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%; max-width: 480px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            text-align: left;
+            opacity: 0; animation: fadeUp 0.6s 0.4s forwards;
+        }
 
-a:hover{
-    border-bottom: 2px solid rgb(165, 107, 107);
-}
+        /* FORM FIELDS */
+        .field {
+            margin-bottom: 1.2rem;
+        }
 
-.home-img{
-    height: 35rem;
-}
+        .field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+        }
 
-.contact-img{
-  position : absolute;
-  right: 100px; 
-  top : 60px;
-  
-}
+        .field input,
+        .field textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            resize: none;
+        }
 
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: rgba(196,181,253,0.4);
+        }
 
-.contents{
-    display: flex;
-    margin-top: 2px;
-    justify-content: space-evenly;
-    margin-top: 60px;
-}
+        .field input:focus,
+        .field textarea:focus {
+            border-color: var(--input-focus);
+            background: rgba(232,121,249,0.05);
+            box-shadow: 0 0 0 3px rgba(232,121,249,0.12);
+        }
 
+        .field textarea { height: 120px; }
 
+        /* SUBMIT BUTTON */
+        .btn-submit {
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 1rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem; font-weight: 600;
+            color: #1a0533;
+            background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+            border: none; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(159,92,246,0.45);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(159,92,246,0.55);
+            filter: brightness(1.07);
+        }
+        .btn-submit:active { transform: translateY(0); }
 
-.info{
-    margin-top: 10%;
-    width: 50%;
-    padding: 2px;
-}
+        .btn-submit svg {
+            width: 18px; height: 18px;
+            fill: #1a0533;
+            transition: transform 0.3s ease;
+        }
+        .btn-submit:hover svg {
+            transform: translateX(3px) rotate(45deg);
+        }
 
-
-.card {
-    background-color: transparent;
-    border-radius: 10px;
-    padding: 20px;
-    width: 500px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top:200px;
-    left: 240px;
-  }
-  
-  .title {
-    font-size: 32px;
-    font-weight: 600;
-    text-align: center;
-    color: rgb(218, 199, 199);
-  }
-  
-  .form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .group {
-    position: relative;
-  }
-  
-  .form .group label {
-    font-size: 19px;
-    color: rgb(0, 17, 17);
-    position: absolute;
-    top: -10px;
-    left: 10px;
-
-    background-color: #fff;
-    transition: all .3s ease; 
-    border-radius: 16px;
-  }
-  
-  .form .group input,
-  .form .group textarea {
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
-    outline: 0;
-    width: 100%;
-    background-color: #8565b9;
-  }
-  
-  .form .group input:placeholder-shown+ label, .form .group textarea:placeholder-shown +label {
-    top: 10px;
-    background-color: transparent;
-  }
-  
-  .form .group input:focus,
-  .form .group textarea:focus {
-    border-color: #3366cc;
-  }
-  
-  .form .group input:focus+ label, .form .group textarea:focus +label {
-    top: -10px;
-    left: 10px;
-    background-color: #fff;
-    color: #3366cc;
-    font-weight: 600;
-    font-size: 14px;
-  }
-  
-  .form .group textarea {
-    resize: none;
-    height: 100px;
-  }
-  
-  
-  
-  button {
-    font-family: inherit;
-    font-size: 28px;
-    background: #a971cd;
-    color: white;
-    padding: 0.7em 1em;
-    padding-left: 0.9em;
-    display: flex;
-    align-items: center;
-    border: none;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.2s;
-  }
-  
-  button span {
-    display: block;
-    margin-left: 0.3em;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  button svg {
-    display: block;
-    transform-origin: center center;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  button:hover .svg-wrapper {
-    animation: fly-1 0.6s ease-in-out infinite alternate;
-  }
-  
-  button:hover svg {
-    transform: translateX(1.2em) rotate(45deg) scale(1.1);
-  }
-  
-  button:hover span {
-    transform: translateX(5em);
-  }
-  
-  button:active {
-    transform: scale(0.95);
-  }
-  
-  @keyframes fly-1 {
-    from {
-      transform: translateY(0.1em);
-    }
-  
-    to {
-      transform: translateY(-0.1em);
-    }
-  }
-  
-  
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <nav>
-            <h1>Swift Share</h1>
-            <main>
-                <h3>
-                    <a href="{% url 'index' %}">Home</a>
-                    <a href="{% url 'about' %}">About</a>
-                    <a href="{% url 'contact' %}">Contact</a>
-                </h3>
-            </main>
-        </nav>
 
-        <div class="customBox">
+    <nav>
+        <span class="nav-brand">Swift Share</span>
+        <ul class="nav-links">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+    </nav>
 
-            <div class="card">
-                <span class="title">Get In Touch</span>
-                <form class="form" method="post">
-                    {% csrf_token %}
-                    <div class="group">
-                        <input placeholder="‎" type="text" required="">
-                        <label for="name">Name</label>
-                    </div>
-                    <div class="group">
-                        <input placeholder="‎" type="email" id="email" name="email" required="">
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="group">
-                        <textarea placeholder="‎" id="comment" name="comment" rows="5" required=""></textarea>
-                        <label for="comment">Comment</label>
-                    </div>
+    <main class="hero">
 
+        <p class="eyebrow">Contact us</p>
+        <h1 class="page-title">We'd love to <em>hear</em> from you</h1>
+        <p class="page-subtitle">Have a question or feedback? Send us a message and we'll get back to you.</p>
 
-                    <button type="submit">
-                        <div class="svg-wrapper-1">
-                            <div class="svg-wrapper">
-                                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                    <path
-                                        d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                                        fill="currentColor"></path>
-                                </svg>
-                            </div>
-                        </div>
+        <div class="form-card">
+            <form method="post">
+                {% csrf_token %}
 
-                        <span>Send</span>
-                    </button>
-                </form>
-            </div>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Your name" required />
+                </div>
 
-            <div class="contact-img">
-                <img src="{% static 'svg/contact.svg' %}" class="contact-img" alt="">
-            </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                </div>
 
+                <div class="field">
+                    <label for="comment">Message</label>
+                    <textarea id="comment" name="comment" placeholder="Your message…" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"/>
+                    </svg>
+                    Send message
+                </button>
+            </form>
         </div>
 
-    </div>
+    </main>
 
 </body>
-
 </html>
