@@ -73,8 +73,9 @@ def sendEmail(request):
     return render(request,'error.html')
 
 def download(request, uid):
-    return render(request, 'download.html',context = {'uid':uid})
-
+    cloud_name = settings.CLOUDINARY_STORAGE['CLOUD_NAME']
+    zip_url = f"https://res.cloudinary.com/{cloud_name}/raw/upload/zips/{uid}.zip"
+    return render(request, 'download.html', context={'uid': uid, 'zip_url': zip_url})
 
 class Handle_Uploaded_Files(APIView):
     parser_classes = [MultiPartParser]
