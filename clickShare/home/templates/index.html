@@ -4,406 +4,722 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
     <link rel="shortcut icon" type="image/svg+xml" href="media/image/tab.svg">
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Swift Share - Send and Save</title>
 
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet" />
+    <script src="{% static 'js/script.js' %}"></script>
 
-    <script src = "{% static 'js/script.js' %}"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Raleway:ital@0;1&display=swap');
-
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
-            font-family: 'Playfair Display', serif;
-            font-family: 'Raleway', sans-serif;
-            box-sizing: border-box; 
+            box-sizing: border-box;
             text-decoration: none;
             scroll-behavior: smooth;
-            color: rgb(245, 245, 245);
+        }
+
+        :root {
+            --bg-from: #3b0764;
+            --bg-to: #7e1d6e;
+            --card-bg: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.15);
+            --accent: #e879f9;
+            --accent-soft: #c026d3;
+            --text-primary: #f5f3ff;
+            --text-muted: #c4b5fd;
+            --upload-bg: rgba(0,0,0,0.25);
+            --upload-border: rgba(232,232,232,0.3);
+            --btn-from: #d8b4fe;
+            --btn-to: #9f5cf6;
         }
 
         body {
-            background: linear-gradient(to bottom right, #6c177d, #bb4488);
-        }
-
-        .center {
-            text-align: center;
-            align-items: center;
-        }
-
-        .container {
-            background: linear-gradient(to bottom right,#832183 ,#e67a91 );
-            margin: 5rem 2rem 5rem 2rem;
-            border-radius: 12px;
-            height: 50rem;
-            box-shadow: 0 0 10px 1px rgba(0, 0, 0, .25);
-            backdrop-filter: blur(15px);
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        }
-
-
-        nav {
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0%;
-            z-index: 10;
-
-        }
-
-
-        main {
-            width: 70%;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        main a {
-            margin: 2rem;
-        }
-
-        a:hover {
-            border-bottom: 2px solid rgb(250, 0, 0);
-        }
-
-        home-img {
-            position: absolute;
-            right: 10px;
-            height: 35rem;
-        }
-
-        .contact-img {
-            position: absolute;
-            right: 100px;
-            top: 60px;
-
-        }
-
-
-        .contents {
-            display: flex;
-            margin-top: 2px;
-            justify-content: space-evenly;
-            margin-top: 60px;
-        }
-
-
-
-        .info {
-            margin-top: 10%;
-            width: 50%;
-            padding: 2px;
-        }
-
-
-        .card {
-            background-color: transparent;
-            border-radius: 10px;
-            padding: 20px;
-            width: 500px;
-            height: 500px;
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 200px;
-            left: 240px;
-        }
-
-        .title {
-            font-size: 32px;
-            font-weight: 600;
-            text-align: center;
-            color: rgb(218, 199, 199);
-        }
-
-        .form {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .group {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-from) 0%, #5b1a6b 45%, var(--bg-to) 100%);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
             position: relative;
         }
 
-        .form .group label {
-            font-size: 19px;
-            color: rgb(0, 17, 17);
+        /* Ambient blobs */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(192,38,211,0.35), transparent 70%);
+            top: -100px; left: -100px;
+            animation: drift1 12s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(109,40,217,0.3), transparent 70%);
+            bottom: -80px; right: -80px;
+            animation: drift2 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px, 80px); } }
+        @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-50px, -60px); } }
+
+        /* NAV */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3rem;
+            background: rgba(59, 7, 100, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #f5f3ff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
             position: absolute;
-            top: -10px;
-            left: 10px;
-
-            background-color: #fff;
-            transition: all .3s ease;
-            border-radius: 16px;
+            bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.25s ease;
         }
 
-        .form .group input,
-        .form .group textarea {
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            outline: 0;
-            width: 100%;
-            background-color: #8565b9;
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 72px);
+            padding: 3rem 1.5rem;
+            text-align: center;
         }
 
-        .form .group input:placeholder-shown+label,
-        .form .group textarea:placeholder-shown+label {
-            top: 10px;
-            background-color: transparent;
-        }
-
-        .form .group input:focus,
-        .form .group textarea:focus {
-            border-color: #3366cc;
-        }
-
-        .form .group input:focus+label,
-        .form .group textarea:focus+label {
-            top: -10px;
-            left: 10px;
-            background-color: #fff;
-            color: #3366cc;
+        .hero-eyebrow {
+            font-size: 0.78rem;
             font-weight: 600;
-            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.1s forwards;
         }
 
-        .form .group textarea {
-            resize: none;
-            height: 100px;
+        .hero-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            line-height: 1.1;
+            max-width: 680px;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.25s forwards;
         }
-  button, button:focus {
-  height: 60px;
-  width: 100%;
-  font-size: 20px;
-  padding: 10px 25px;
-  border-radius: 0.7rem;
-  background-image: linear-gradient(rgb(214, 202, 254), rgb(158, 129, 254));
-  border: 2px solid rgb(50, 50, 50);
-  border-bottom: 5px solid rgb(50, 50, 50);
-  box-shadow: 0px 1px 6px 0px rgb(158, 129, 254);
-  transform: translate(0, -3px);
-  transition: 0.2s;
-  transition-timing-function: linear;
-}
 
-button:active {
-  transform: translate(0, 0);
-  border-bottom: 2px solid rgb(50, 50, 50);
-}
-        .content {
+        .hero-title em {
+            font-style: italic;
+            background: linear-gradient(90deg, var(--accent), #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 420px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.4s forwards;
+        }
+
+        /* UPLOAD CARD */
+        .upload-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem 2.5rem 2rem;
+            width: 100%;
+            max-width: 460px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05) inset;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.55s forwards;
+        }
+
+        /* CUSTOM FILE UPLOAD */
+        .custum-file-upload {
+            height: 200px;
+            width: 100%;
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            cursor: pointer;
+            border: 2px dashed var(--upload-border);
+            background: var(--upload-bg);
+            padding: 1.5rem;
+            border-radius: 14px;
+            transition: border-color 0.25s, background 0.25s, transform 0.2s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .illustration {
+        .custum-file-upload::before {
+            content: '';
             position: absolute;
-            margin-right: 20px;
-            top: 60%;
-            width: 30%;
-            padding: 10px;
-            left : 300px;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(232,121,249,0.08), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        label {
-            color: black;
+        .custum-file-upload:hover {
+            border-color: var(--accent);
+            background: rgba(232,121,249,0.05);
+            transform: translateY(-2px);
         }
 
-        image {
-            position: absolute;
-            right: 10px;
+        .custum-file-upload:hover::before { opacity: 1; }
+
+        .custum-file-upload .icon svg {
+            height: 56px;
+            fill: var(--text-muted);
+            transition: fill 0.25s, transform 0.3s;
         }
 
-        .home-img{
-        position: absolute;
-        right: 70px;
-        height: 35rem;
-        margin-top: 2rem;
+        .custum-file-upload:hover .icon svg {
+            fill: var(--accent);
+            transform: translateY(-3px);
         }
 
-        .file-img{
-            position: absolute;
-            height:20rem;
-            top: 20%;
-            left: 22%;
-
+        .custum-file-upload .text span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.25s;
         }
 
-       /* .btn {
-            width: 100%;
-            text-align: center;
+        .custum-file-upload:hover .text span {
+            color: var(--text-primary);
         }
 
-        .btn>span {
-            width: 100%;
-            text-align: center;
-        }*/ 
+        .custum-file-upload input {
+            display: none;
+        }
 
-        .box {
-            top : 80%;
-            padding: 10px;
+        /* FILE LIST */
+        .file-list {
+            margin-top: 1rem;
             display: flex;
-            justify-content: space-around;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 140px;
+            overflow-y: auto;
         }
-        .downloadbtn{
-            margin: 2px;
+
+        .file-list::-webkit-scrollbar { width: 4px; }
+        .file-list::-webkit-scrollbar-track { background: transparent; }
+        .file-list::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.82rem;
+            animation: fadeUp 0.3s forwards;
+        }
+
+        .file-item-name {
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 280px;
+        }
+
+        .file-item-size {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+        }
+
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 0 0 0 0.5rem;
+            height: auto;
+            width: auto;
+            box-shadow: none;
+            transform: none;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+        .file-item-remove:hover { color: #f87171; transform: none; border: none; }
+        .file-item-remove:active { transform: none; border: none; }
+
+        /* UPLOAD HINT */
+        .upload-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.6rem;
+            opacity: 0.7;
+        }
+
+        /* BUTTONS */
+        .btn-row {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
             width: 100%;
+            padding: 0.9rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a0533;
+            background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(159,92,246,0.45);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            height: auto;
         }
 
-        .download{
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(159,92,246,0.55);
+            filter: brightness(1.07);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(159,92,246,0.35);
+            border-bottom: none;
+        }
+
+        .btn-primary svg {
+            width: 18px; height: 18px;
+            fill: #1a0533;
+        }
+
+        /* Loading spinner inside button */
+        .spinner {
+            width: 18px; height: 18px;
+            border: 2.5px solid rgba(26,5,51,0.3);
+            border-top-color: #1a0533;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Download section */
+        .download-section {
+            display: none;
+            margin-top: 1.2rem;
+            background: rgba(232,121,249,0.08);
+            border: 1px solid rgba(232,121,249,0.25);
+            border-radius: 14px;
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+        }
+
+        .download-section .dl-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .download-link-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .download-link-row span {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.25rem 0.6rem;
+            height: auto;
+            width: auto;
+            box-shadow: none;
+            transform: none;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .copy-btn:hover { color: var(--accent); border-color: var(--accent); transform: none; }
+        .copy-btn:active { transform: none; border-bottom: 1px solid var(--card-border); }
+
+        .btn-download {
             width: 100%;
-            margin: 2px;;
+            padding: 0.75rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 18px rgba(232,121,249,0.2);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            height: auto;
+        }
+        .btn-download:hover {
+            background: rgba(232,121,249,0.1);
+            box-shadow: 0 0 28px rgba(232,121,249,0.35);
+            transform: translateY(-1px);
+        }
+        .btn-download:active {
+            transform: translateY(0);
+            border-bottom: 1.5px solid var(--accent);
         }
 
-        span{
-            text-align: center;
+        /* Copied toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(30,10,50,0.95);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 999;
+            backdrop-filter: blur(12px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
+        /* FOOTER CHIPS */
+        .feature-chips {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.8s forwards;
+        }
 
+        .chip {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 0.4rem 1rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
 
+        .chip svg {
+            width: 13px; height: 13px;
+            fill: var(--accent);
+        }
 
-        @keyframes fly-1 {
-            from {
-                transform: translateY(0.1em);
-            }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-            to {
-                transform: translateY(-0.1em);
-            }
+        /* Drag over state */
+        .custum-file-upload.drag-over {
+            border-color: var(--accent);
+            background: rgba(232,121,249,0.1);
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <nav>
-            <h1>Swift Share</h1>
-            <main>
-                <h3>
-                    <a href="{% url 'index' %}">Home</a>
-                    <a href="{% url 'about' %}">About</a>
-                    <a href="{% url 'contact' %}">Contact</a>
-                </h3>
-            </main>
-        </nav>
 
+    <nav>
+        <span class="nav-brand">Swift Share</span>
+        <ul class="nav-links">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+    </nav>
 
-        <div class="box">
+    <main class="hero">
+        <p class="hero-eyebrow">Instant file sharing</p>
+        <h1 class="hero-title">Share files <em>instantly</em><br>with anyone</h1>
+        <p class="hero-subtitle">Upload your files, get a shareable link in seconds. No account needed.</p>
 
-            <div class="image">
-                <img src="/media/image/Folder-pana.svg" class="file-img">
+        <div class="upload-card">
+
+            <!-- Custom file upload zone -->
+            <label for="file-input" class="custum-file-upload" id="dropZone">
+                <div class="icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z"/>
+                    </svg>
+                </div>
+                <div class="text">
+                    <span>Click or drag files to upload</span>
+                </div>
+                <input id="file-input" type="file" multiple />
+            </label>
+
+            <p class="upload-hint">Supports any file type · Multiple files allowed</p>
+
+            <!-- File list -->
+            <div class="file-list" id="fileList"></div>
+
+            <!-- Buttons -->
+            <div class="btn-row">
+                <button class="btn-primary" onclick="upload_file()" id="uploadBtn">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 16V7.85l-2.6 2.6L7 9l5-5 5 5-1.4 1.45L13 7.85V16h-2zm-5 4q-.825 0-1.412-.587T4 18v-3h2v3h12v-3h2v3q0 .825-.587 1.413T18 20H6z"/>
+                    </svg>
+                    <div class="spinner" id="uploadSpinner"></div>
+                    <span id="uploadBtnText">Upload Files</span>
+                </button>
             </div>
 
-            <div class="illustration">
-
-                <input type="file" class="my-pond mt-4" multiple name="filepond" />
-
-                <div class="text-center">
-                    <button class="btn" onclick="upload_file()">
-                        <span>Upload File</span>
-                    </button>
-
-                    <div class="carad mt-3" id="btn" style="display: none">
-                        <center>
-                            <button onclick="copyClip()">
-                                <span>Donwload File</span>
-                            </button>
-                        </center>
-    
-                    </div>
-                </div>   
-            </div>
-
-
-            <div class ="image">
-                <img src = "/media/image/Folder-amico.svg" class="home-img">
+            <!-- Download section (hidden until upload) -->
+            <div class="download-section" id="downloadSection">
+                <p class="dl-label">✓ Files ready</p>
+                <div class="download-link-row">
+                    <span id="linkDisplay"></span>
+                    <button class="copy-btn" onclick="copyLink()">Copy</button>
+                </div>
+                <button class="btn-download" onclick="goToDownload()">Open Download Page →</button>
             </div>
 
         </div>
-    </div>
 
-</body>
-<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.3/filepond.min.js"
-    integrity="sha512-AuMJiyTn/5k+gog21BWPrcoAC+CgOoobePSRqwsOyCSPo3Zj64eHyOsqDev8Yn9H45WUJmzbe9RaLTdFKkO0KQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+        <div class="feature-chips">
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                Secure sharing
+            </div>
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 3.21-1.81 6.1-4.72 7.72L13 17v5h5l-1.22-1.22C19.91 19.07 22 15.76 22 12c0-5.18-3.95-9.45-9-9.95zM11 2.05C5.95 2.55 2 6.82 2 12c0 3.76 2.09 7.07 5.22 8.78L6 22h5v-5l-2.28 2.28C7.06 18.1 6 15.17 6 12c0-4.08 3.05-7.44 7-7.93V2.05z"/></svg>
+                No account needed
+            </div>
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                Instant link
+            </div>
+        </div>
+    </main>
 
+    <div class="toast" id="toast">Link copied!</div>
 
 <script>
-    
-    FilePond.registerPlugin(
-        FilePondPluginImagePreview,
+    var shareUrl = null;
+    var selectedFiles = [];
 
-    );
+    const fileInput = document.getElementById('file-input');
+    const fileList  = document.getElementById('fileList');
+    const dropZone  = document.getElementById('dropZone');
 
-    const pond = FilePond.create(
-        document.querySelector('.my-pond')
-    );
+    // File input change
+    fileInput.addEventListener('change', function() {
+        addFiles(Array.from(this.files));
+        this.value = ''; // reset so same file can be re-added
+    });
 
-    var url = null
+    // Drag and drop
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        addFiles(Array.from(e.dataTransfer.files));
+    });
 
-    function upload_file() {
-        var files = pond.getFiles()
-
-        var formdata = new FormData()
-
-        if(files.length == 0 ){
-            alert("Please Upload Atleast one File")
-        }
-        else{
-
-        
-        for (var i = 0; i < files.length; i++) {
-            formdata.append('files', files[i].file)
-        }
-
-        fetch('/handle/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': "{{csrf_token}}"
-                },
-                body: formdata
-            }).then(res => res.json())
-            .then(result => {
-                console.log(result)
-
-                url = `http://127.0.0.1:8000/download/${result.data.folder}`
-
-                document.getElementById('btn').style.display = ''
-                
-
-            })
-        }
-
+    function addFiles(files) {
+        files.forEach(f => {
+            if (!selectedFiles.find(x => x.name === f.name && x.size === f.size)) {
+                selectedFiles.push(f);
+            }
+        });
+        renderFileList();
     }
 
-    function copyClip() {
-        console.log('dd')
-        /* Copy the text inside the text field */
-        navigator.clipboard.writeText(url);
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        renderFileList();
+    }
 
-        /* Alert the copied text */
-        alert("Copied the text: " + url);
-          window.location.href = url;
-    } 
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function renderFileList() {
+        fileList.innerHTML = '';
+        selectedFiles.forEach((f, i) => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `
+                <span class="file-item-name">${f.name}</span>
+                <span class="file-item-size">${formatSize(f.size)}</span>
+                <button class="file-item-remove" onclick="removeFile(${i})" title="Remove">✕</button>
+            `;
+            fileList.appendChild(item);
+        });
+    }
+
+    function upload_file() {
+        if (selectedFiles.length === 0) {
+            showToast('Please select at least one file', true);
+            return;
+        }
+
+        const btn     = document.getElementById('uploadBtn');
+        const spinner = document.getElementById('uploadSpinner');
+        const btnText = document.getElementById('uploadBtnText');
+
+        btn.disabled = true;
+        spinner.style.display = 'block';
+        btnText.textContent = 'Uploading…';
+
+        const formdata = new FormData();
+        selectedFiles.forEach(f => formdata.append('files', f));
+
+        fetch('/handle/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': "{{csrf_token}}" },
+            body: formdata
+        })
+        .then(res => res.json())
+        .then(result => {
+            spinner.style.display = 'none';
+            btnText.textContent = 'Upload Files';
+            btn.disabled = false;
+
+            shareUrl = `${window.location.origin}/download/${result.data.folder}`;
+
+            document.getElementById('linkDisplay').textContent = shareUrl;
+            document.getElementById('downloadSection').style.display = 'block';
+        })
+        .catch(err => {
+            spinner.style.display = 'none';
+            btnText.textContent = 'Upload Files';
+            btn.disabled = false;
+            showToast('Upload failed. Please try again.', true);
+            console.error(err);
+        });
+    }
+
+    function copyLink() {
+        if (!shareUrl) return;
+        navigator.clipboard.writeText(shareUrl);
+        showToast('Link copied!');
+    }
+
+    function goToDownload() {
+        if (shareUrl) window.location.href = shareUrl;
+    }
+
+    function showToast(msg, isError) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.style.borderColor = isError ? '#f87171' : 'var(--accent)';
+        t.style.color = isError ? '#f87171' : 'var(--accent)';
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
 </script>
+</body>
 </html>
