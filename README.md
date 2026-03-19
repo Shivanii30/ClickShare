@@ -7,9 +7,7 @@ ClickShare is a **real-time file sharing web application** built using Django an
 ## Features
 
 * File upload and download
-* Real-time updates using WebSockets
 * Multiple users can access shared files
-* Basic user authentication
 
 ---
 
@@ -20,7 +18,6 @@ ClickShare is a **real-time file sharing web application** built using Django an
 * Python
 * Django
 * Django Channels
-* WebSockets
 
 **Frontend**
 
@@ -30,7 +27,7 @@ ClickShare is a **real-time file sharing web application** built using Django an
 
 **Database**
 
-* SQLite
+* Postgres
 
 ---
 
