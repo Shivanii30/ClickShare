@@ -1,334 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    {% load static %}
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" type="image/svg+xml" href="media/image/tab.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swift Share – Download</title>
 
-  <style>
-    /**
- * FilePond Custom Styles
- */
-    .filepond--drop-label {
-      color: #4c4e53;
-    }
+    <script src="{% static 'js/script.js' %}"></script>
 
-    .filepond--label-action {
-      -webkit-text-decoration-color: #babdc0;
-      text-decoration-color: #babdc0;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    .filepond--panel-root {
-      border-radius: 2em;
-      background-color: #edf0f4;
-      height: 1em;
-    }
+    <style>
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            scroll-behavior: smooth;
+        }
 
-    .filepond--item-panel {
-      background-color: #595e68;
-    }
+        :root {
+            --bg-from: #3b0764;
+            --bg-to: #7e1d6e;
+            --card-bg: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.15);
+            --accent: #e879f9;
+            --accent-soft: #c026d3;
+            --text-primary: #f5f3ff;
+            --text-muted: #c4b5fd;
+            --btn-from: #d8b4fe;
+            --btn-to: #9f5cf6;
+        }
 
-    .filepond--drip-blob {
-      background-color: #7f8a9a;
-    }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-from) 0%, #5b1a6b 45%, var(--bg-to) 100%);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    center>a>.clipboard {
-      text-decoration: none;
-    }
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(192,38,211,0.3), transparent 70%);
+            top: -100px; left: -100px;
+            animation: drift1 12s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(109,40,217,0.25), transparent 70%);
+            bottom: -80px; right: -80px;
+            animation: drift2 15s ease-in-out infinite alternate;
+        }
+        @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px,80px); } }
+        @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-50px,-60px); } }
 
-    /**
- * Page Styles
- */
-    html {
-      padding: 3vh 0 0;
-      height: 100%;
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 3rem;
+            background: rgba(59,7,100,0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .nav-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #f5f3ff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            font-size: 0.95rem; font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent); border-radius: 2px;
+            transition: width 0.25s ease;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
 
-    }
+        /* HERO */
+        .hero {
+            position: relative; z-index: 1;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: calc(100vh - 72px);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
 
-    body {
-      max-width: 28em;
-      height: 100%;
-      margin: 0 auto;
-      background: linear-gradient(to bottom right, #832183, #e67a91);
-      background-repeat: no-repeat
-    }
+        /* SUCCESS ICON */
+        .success-ring {
+            width: 88px; height: 88px;
+            border-radius: 50%;
+            background: rgba(232,121,249,0.1);
+            border: 2px solid rgba(232,121,249,0.3);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 2rem;
+            opacity: 0; animation: popIn 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) forwards;
+            box-shadow: 0 0 40px rgba(232,121,249,0.2);
+        }
+        .success-ring svg {
+            width: 42px; height: 42px;
+            fill: var(--accent);
+        }
 
-    center {
-      color: #101061;
-    }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.6); }
+            to   { opacity: 1; transform: scale(1); }
+        }
 
-    .background {
+        .eyebrow {
+            font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            opacity: 0; animation: fadeUp 0.5s 0.3s forwards;
+        }
 
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+        .page-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            margin-bottom: 0.8rem;
+            opacity: 0; animation: fadeUp 0.5s 0.4s forwards;
+        }
 
-    .clipboard {
-      border: 0;
-      padding: 15px;
-      border-radius: 3px;
-      background-image: linear-gradient(135deg, #FDEB71 10%, #F8D800 100%);
-      cursor: pointer;
-      color: #04048c;
-      font-family: "Karla", sans-serif;
-      font-size: 16px;
-      position: relative;
-      top: 0;
-      transition: all 0.2s ease;
-      text-decoration: none;
-      margin: 2px;
-    }
+        .page-subtitle {
+            font-size: 1rem; color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            opacity: 0; animation: fadeUp 0.5s 0.5s forwards;
+        }
 
-    body .clipboard:hover {
-      top: 2px;
-    }
+        /* DOWNLOAD CARD */
+        .download-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.5rem 2.5rem 2rem;
+            width: 100%; max-width: 460px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            opacity: 0; animation: fadeUp 0.6s 0.55s forwards;
+        }
 
-    body p {
-      font-weight: 700;
-    }
+        /* FILE INFO ROW */
+        .file-info {
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .file-icon {
+            width: 44px; height: 44px; flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(232,121,249,0.12);
+            border: 1px solid rgba(232,121,249,0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .file-icon svg { width: 22px; height: 22px; fill: var(--accent); }
+        .file-meta { flex: 1; min-width: 0; }
+        .file-meta .fname {
+            font-size: 0.9rem; font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .file-meta .fuid {
+            font-size: 0.75rem; color: var(--text-muted);
+            margin-top: 2px;
+            font-family: monospace;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
 
+        /* BUTTONS */
+        .btn-row {
+            display: flex; flex-direction: column; gap: 0.75rem;
+        }
 
+        .btn-primary {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem; font-weight: 600;
+            color: #1a0533;
+            background: linear-gradient(135deg, var(--btn-from), var(--btn-to));
+            border: none; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(159,92,246,0.45);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(159,92,246,0.55);
+            filter: brightness(1.07);
+            color: #1a0533;
+        }
+        .btn-primary svg { width: 18px; height: 18px; fill: #1a0533; }
 
+        .btn-outline {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem; font-weight: 500;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px; cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: rgba(232,121,249,0.06);
+        }
+        .btn-outline svg { width: 16px; height: 16px; fill: currentColor; }
 
+        /* COPY ROW */
+        .copy-row {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.55rem 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .copy-row span {
+            font-size: 0.8rem; color: var(--text-muted);
+            flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-family: monospace;
+        }
+        .copy-btn {
+            flex-shrink: 0;
+            background: rgba(232,121,249,0.1);
+            border: 1px solid rgba(232,121,249,0.25);
+            border-radius: 6px;
+            color: var(--accent);
+            font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; padding: 0.28rem 0.7rem;
+            transition: background 0.2s, border-color 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .copy-btn:hover { background: rgba(232,121,249,0.2); }
 
+        /* TOAST */
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: rgba(30,10,50,0.95);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 0.6rem 1.4rem;
+            border-radius: 50px;
+            font-size: 0.85rem; font-weight: 500;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 999;
+            backdrop-filter: blur(12px);
+        }
+        .toast.show {
+            opacity: 1; transform: translateX(-50%) translateY(0);
+        }
 
-    .button {
-      -moz-appearance: none;
-      -webkit-appearance: none;
-      appearance: none;
-      border: none;
-      background: none;
-      color: #0f1923;
-      cursor: pointer;
-      position: relative;
-      padding: 8px;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      font-weight: bold;
-      font-size: 14px;
-      transition: all .15s ease;
-    }
+        /* CHIPS */
+        .feature-chips {
+            display: flex; gap: 1rem; margin-top: 2.5rem;
+            flex-wrap: wrap; justify-content: center;
+            opacity: 0; animation: fadeUp 0.6s 0.9s forwards;
+        }
+        .chip {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 0.4rem 1rem;
+            font-size: 0.78rem; color: var(--text-muted);
+        }
+        .chip svg { width: 13px; height: 13px; fill: var(--accent); }
 
-    .button::before,
-    .button::after {
-      content: '';
-      display: block;
-      position: absolute;
-      right: 0;
-      left: 0;
-      height: calc(50% - 5px);
-      border: 1px solid #7D8082;
-      transition: all .15s ease;
-    }
-
-    .button::before {
-      top: 0;
-      border-bottom-width: 0;
-    }
-
-    .button::after {
-      bottom: 0;
-      border-top-width: 0;
-    }
-
-    .button:active,
-    .button:focus {
-      outline: none;
-    }
-
-    .button:active::before,
-    .button:active::after {
-      right: 3px;
-      left: 3px;
-    }
-
-    .button:active::before {
-      top: 3px;
-    }
-
-    .button:active::after {
-      bottom: 3px;
-    }
-
-    .button_lg {
-      position: relative;
-      display: block;
-      padding: 10px 20px;
-      color: #fff;
-      background-color: #0f1923;
-      overflow: hidden;
-      box-shadow: inset 0px 0px 0px 1px transparent;
-    }
-
-    .button_lg::before {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 2px;
-      background-color: #0f1923;
-    }
-
-    .button_lg::after {
-      content: '';
-      display: block;
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 4px;
-      height: 4px;
-      background-color: #0f1923;
-      transition: all .2s ease;
-    }
-
-    .button_sl {
-      display: block;
-      position: absolute;
-      top: 0;
-      bottom: -1px;
-      left: -8px;
-      width: 0;
-      background-color: #ff4655;
-      transform: skew(-15deg);
-      transition: all .2s ease;
-    }
-
-    .button_text {
-      position: relative;
-    }
-
-    .button:hover {
-      color: #0f1923;
-    }
-
-    .button:hover .button_sl {
-      width: calc(100% + 15px);
-    }
-
-    .button:hover .button_lg::after {
-      background-color: #fff;
-    }
-
-    .download {
-      text-decoration: none;
-      color: white;
-      height: 100px;
-    }
-  </style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 
 <body>
-  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/filepond/4.30.3/filepond.min.js"
-    integrity="sha512-AuMJiyTn/5k+gog21BWPrcoAC+CgOoobePSRqwsOyCSPo3Zj64eHyOsqDev8Yn9H45WUJmzbe9RaLTdFKkO0KQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-  <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
-  <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <nav>
+        <span class="nav-brand">Swift Share</span>
+        <ul class="nav-links">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+    </nav>
 
+    <main class="hero">
 
-  <div class="text-center">
+        <div class="success-ring">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
 
-    <img src="/media/image/Folder-pana.svg" class="img-fluid img-responsive" style="height: 500px;">
-  </div>
+        <p class="eyebrow">Ready to download</p>
+        <h1 class="page-title">Your files are ready</h1>
+        <p class="page-subtitle">Everything has been bundled into a single ZIP file for you.</p>
 
+        <div class="download-card">
 
-  <div class="carad mt-5">
-    <div class="card-bodqy">
+            <!-- Action buttons -->
+            <div class="btn-row">
+                <a href="/media/zip/{{ uid }}.zip" class="btn-primary" download>
+                    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Download ZIP
+                </a>
+                <a href="{% url 'index' %}" class="btn-outline">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    Upload another file
+                </a>
+            </div>
 
+        </div>
 
-      <div class="background">
-        <button class="button" id="showDisplay">
-          <span class="button_lg" style="width: 300px; height:50px;">
-            <span class="button_sl"></span>
-            <center>
-              <span class="button_text span_size"><a href="/media/zip/{{uid}}.zip" class="download">Download
-                  Files</a></span>
-            </center>
-          </span>
-        </button>
+        <div class="feature-chips">
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                Unique link
+            </div>
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Auto-bundled ZIP
+            </div>
+            <div class="chip">
+                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                Share anywhere
+            </div>
+        </div>
 
+    </main>
 
+    <div class="toast" id="toast">Link copied!</div>
 
-        
+<script>
+    // Build and display shareable link
+    const uid = "{{ uid }}";
+    const shareLink = `${window.location.origin}/download/${uid}`;
+    document.getElementById('shareLink').textContent = shareLink;
 
-        <!-- Email to  be Updated -->
-        <!-- Clipboard data to be send to backend [js ke clipboard se python ke views tak]  -->
-        <!-- <center>
-          <a href="http://127.0.0.1:8000/email" class="btn btn-primary">Email Files</a>
-        </center> -->
-        <!-- 
-        <center>
-          <a href="/media/zip/{{uid}}.zip" class="clipboard">Download Files</a>
-        </center> -->
+    function copyLink() {
+        navigator.clipboard.writeText(shareLink).then(() => showToast('Link copied!'));
+    }
 
-        <br>
-
-
-        <button class="button" style="display: none;" id="showww">
-          <a href="{% url 'index' %}" class="download">
-
-          
-          <span class="button_lg" style="width: 300px; height:50px;">
-            <span class="button_sl"></span>
-            <center>
-              <span class="button_text span_size download">Upload Another File</span>
-            </center>
-          </span>
-        </a>
-        </button>
-
-      </div>
-
-
-    </div>
-
-
-  </div>
-
-
-  </div>
-
-
-
-
-  <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-
-
-  <script>
-
-
-    let button = document.getElementById("showDisplay");
-    button.addEventListener('click',()=>{
-      let btn = document.getElementById("showww");
-      btn.style.display = "";
-      console.log("Tr")
-    })
-
-
-    $(function () {
-      $.fn.filepond.registerPlugin(FilePondPluginImagePreview,);
-      $('.my-pond').filepond();
-      $('.my-pond').filepond('allowMultiple', true);
-      $('.my-pond').on('FilePond:addfile', function (e) {
-        console.log('file added event', e);
-      });
-    });
-
-    console.log()
-  </script>
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+</script>
 
 </body>
-
 </html>
