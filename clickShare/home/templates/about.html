@@ -2,142 +2,330 @@
 <html lang="en">
     {% load static %}
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="shortcut icon" type="image/svg+xml" href="media/image/tab.svg">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swift Share - Send and Save</title>
-    <script src = "{% static 'js/script.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swift Share – About</title>
+
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Raleway:ital@0;1&display=swap');
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            scroll-behavior: smooth;
+        }
 
-*{
-    margin: 0;
-    padding: 0;
-    font-family: 'Playfair Display', serif;
-    font-family: 'Raleway', sans-serif;
-    box-sizing: border-box;
-    text-decoration: none;
-    scroll-behavior: smooth;
-    color: rgb(245, 245, 245);
-}
-body{
-    background: linear-gradient(to bottom right, #6c177d, #bb4488);
-}
+        :root {
+            --bg-from: #3b0764;
+            --bg-to: #7e1d6e;
+            --card-bg: rgba(255,255,255,0.07);
+            --card-border: rgba(255,255,255,0.15);
+            --accent: #e879f9;
+            --text-primary: #f5f3ff;
+            --text-muted: #c4b5fd;
+        }
 
-.container{
-    background: linear-gradient(to bottom right,#832183 ,#e67a91 );
-    margin: 5rem 2rem 5rem 2rem;
-    border-radius: 10px;
-    height:50rem;
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, .25);
-    backdrop-filter: blur(15px);
-}
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-from) 0%, #5b1a6b 45%, var(--bg-to) 100%);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-h1{
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::before {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(192,38,211,0.3), transparent 70%);
+            top: -100px; left: -100px;
+            animation: drift1 12s ease-in-out infinite alternate;
+        }
+        body::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(109,40,217,0.25), transparent 70%);
+            bottom: -80px; right: -80px;
+            animation: drift2 15s ease-in-out infinite alternate;
+        }
+        @keyframes drift1 { from { transform: translate(0,0); } to { transform: translate(60px,80px); } }
+        @keyframes drift2 { from { transform: translate(0,0); } to { transform: translate(-50px,-60px); } }
 
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-}
+        /* NAV — identical to index */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 3rem;
+            background: rgba(59,7,100,0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .nav-brand {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #f5f3ff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            font-size: 0.95rem; font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent); border-radius: 2px;
+            transition: width 0.25s ease;
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
 
+        /* PAGE */
+        .page {
+            position: relative; z-index: 1;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 5rem 2rem 6rem;
+        }
 
-nav{
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0%;
-    z-index: 10;
-    
-}
+        /* HERO LABEL */
+        .eyebrow {
+            font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 3px; text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0; animation: fadeUp 0.5s 0.1s forwards;
+        }
 
+        .page-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0; animation: fadeUp 0.55s 0.2s forwards;
+        }
+        .page-title em {
+            font-style: italic;
+            background: linear-gradient(90deg, var(--accent), #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-main{
-    width: 70%;
-    display: flex;
-    justify-content: flex-end;
-    text-align: left;
-}
+        .page-lead {
+            font-size: 1.1rem; color: var(--text-muted);
+            line-height: 1.7; max-width: 580px;
+            margin-bottom: 3.5rem;
+            opacity: 0; animation: fadeUp 0.55s 0.3s forwards;
+        }
 
-main a{
-    margin: 2rem;
-}
+        /* DIVIDER */
+        .divider {
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            border-radius: 2px;
+            margin-bottom: 3.5rem;
+            opacity: 0; animation: fadeUp 0.5s 0.35s forwards;
+        }
 
-a:hover{
-    border-bottom: 2px solid rgb(158, 135, 135);
-}
+        /* CARDS GRID */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 4rem;
+        }
 
-.home-img{
-    height: 35rem;
-}
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 1.8rem 1.6rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: transform 0.25s, box-shadow 0.25s;
+            opacity: 0;
+        }
+        .card:nth-child(1) { animation: fadeUp 0.55s 0.4s forwards; }
+        .card:nth-child(2) { animation: fadeUp 0.55s 0.52s forwards; }
+        .card:nth-child(3) { animation: fadeUp 0.55s 0.64s forwards; }
+        .card:nth-child(4) { animation: fadeUp 0.55s 0.76s forwards; }
 
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+        }
 
+        .card-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(232,121,249,0.12);
+            border: 1px solid rgba(232,121,249,0.2);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.1rem;
+        }
+        .card-icon svg {
+            width: 22px; height: 22px;
+            fill: var(--accent);
+        }
+        .card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.15rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        .card p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
 
-.contents{
-    left: 10px;
-    display: flex;
-    margin-top: 2px;
-    justify-content: space-evenly;
-    margin-top: 60px;
-}
+        /* STORY BLOCK */
+        .story {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem 2.5rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            opacity: 0; animation: fadeUp 0.6s 0.85s forwards;
+        }
+        .story h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+        }
+        .story p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+        .story p:last-child { margin-bottom: 0; }
 
+        /* CTA */
+        .cta-row {
+            margin-top: 3rem;
+            display: flex; gap: 1rem; flex-wrap: wrap;
+            opacity: 0; animation: fadeUp 0.55s 1s forwards;
+        }
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 1.8rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            color: #1a0533;
+            background: linear-gradient(135deg, #d8b4fe, #9f5cf6);
+            border: none; border-radius: 12px; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(159,92,246,0.4);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(159,92,246,0.5);
+            filter: brightness(1.07);
+            color: #1a0533;
+        }
+        .btn-outline {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 1.8rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem; font-weight: 600;
+            color: var(--text-primary);
+            background: transparent;
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px; cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(232,121,249,0.07);
+            color: var(--text-primary);
+        }
 
-
-.info{
-   /* left: 20px;
-    top : 15px;
-    width: 50%;
-    padding: 2px;*/
-
-
-    max-width: 800px;
-    margin:0 auto;
-    text-align: left;
-}
-
-p{
-    font-size: 18px;
-    margin: 20px 20px 20px 0;
-    text-align: justify;
-}
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <nav>
-            <h1>Swift Share</h1>
-            <main>
-                <h3>
-                <a href="{% url 'index' %}">Home</a>
-                <a href="{% url 'about' %}">About</a>
-                <a href="{% url 'contact' %}">Contact</a></h3>
-            </main>
-        </nav>
 
-        <div class="contents">
-            <div class="info">
-                <h1>About Us</h1> 
-                <p>
-                <h4>
-                <h2>Welcome to our file sharing platform!</h2>
-                    <p>We understand that sharing files can sometimes be a daunting task, especially when dealing with large or sensitive documents.  That's why we created this platform to make file sharing quick, easy, and secure.</p>
-                    <p>Our platform allows you to upload and share files of any size with anyone, anywhere in the world. Whether you need to send a report to a colleague across the country or share photos with family and friends, our platform has got you covered. </p>
-                </h4>
-                </p>
+    <nav>
+        <span class="nav-brand">Swift Share</span>
+        <ul class="nav-links">
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <p class="eyebrow">About us</p>
+        <h1 class="page-title">Built to make sharing <em>effortless</em></h1>
+        <p class="page-lead">We understand that sharing files can be tedious. Swift Share makes it instant — upload once, share anywhere, no account required.</p>
+
+        <div class="divider"></div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                </div>
+                <h3>Secure by design</h3>
+                <p>Each upload gets its own unique UUID-based link. No guessing, no accidental leaks.</p>
             </div>
-
-            <div class="image">
-                
-                <img src="Folder-amico.svg" class="home-img" alt="">
+            <div class="card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.5C18 2.01 15.99 0 13.5 0c-1.3 0-2.4.56-3.18 1.44L10 2.45 9.68 1.44C8.9.56 7.8 0 6.5 0 4.01 0 2 2.01 2 4.5c0 .62.11 1.06.18 1.5H0v14c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+                </div>
+                <h3>Any file type</h3>
+                <p>Documents, images, archives — we bundle everything into a neat ZIP automatically.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                </div>
+                <h3>No account needed</h3>
+                <p>Share with anyone, whether or not they have an account. Just send the link.</p>
             </div>
         </div>
+
+        <div class="story">
+            <h2>Our story</h2>
+            <p>Swift Share started as a simple side project — frustrated by bloated, login-walled file sharing tools, we wanted something that just worked. Drop your files, get a link, done.</p>
+            <p>Today it handles multi-file uploads with automatic ZIP packaging, shareable download pages, and a clean UI that gets out of your way. Whether you're sending a report to a colleague or sharing photos with family across the world, Swift Share has you covered.</p>
+
+            <div class="cta-row">
+                <a href="{% url 'index' %}" class="btn-primary">Start sharing →</a>
+                <a href="{% url 'contact' %}" class="btn-outline">Get in touch</a>
+            </div>
+        </div>
+
     </div>
-    
+
 </body>
 </html>
