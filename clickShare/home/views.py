@@ -1,119 +1,117 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serializers import *
-from rest_framework.decorators import api_view
-from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+import logging
+
 from django.conf import settings
 from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from .models import Folder
+from .serializers import FileListSerializer
 
+logger = logging.getLogger(__name__)
 
 
 def index(request):
-    return render(request,"index.html")
+    return render(request, "index.html")
 
 
+def about(request):
+    return render(request, "about.html")
+
+
+def error(request):
+    return render(request, "error.html")
+
+
+def healthcheck(request):
+    return JsonResponse({"status": "ok"})
 
 
 def contact(request):
     if request.method == "POST":
+        email = request.POST.get("email", "").strip()
+        message = request.POST.get("comment", "").strip()
+
         try:
-            email = request.POST.get("email")
-            subject="Your Feedback was appreciated"
-            message=request.POST.get("comment")
-            email_from= settings.EMAIL_HOST_USER
-            recipient_list = [email]
-            print(message)
-            send_mail(subject,message,email_from,recipient_list)
-            print(email,recipient_list,subject)
-            return render(request,'success.html')
-        except Exception as e:
-            print(e)
-            return render(request,'error.html')
-    
-    
-    
-    
-    
-    return render(request,'contact.html')
+            send_mail(
+                "Your feedback was appreciated",
+                message,
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            return render(request, "success.html")
+        except Exception:
+            logger.exception("Failed to send contact email to %s", email)
+            return render(request, "error.html")
 
-
-
-def error(request):
-    return render(request,'error.html')
-
-def about(request):
-    return render(request, 'about.html')
-
+    return render(request, "contact.html")
 
 
 def sendEmail(request):
     if request.method == "POST":
+        email = request.POST.get("email", "").strip()
         try:
-            email = request.POST.get("email")
-            subject="Appreciation for Feedback"
-            message = "Demo Email"
-            email_from= settings.EMAIL_HOST_USER
-            recipient_list = [email]
-            print(message)
-            send_mail(subject,message,email_from,recipient_list)
-            print(email,recipient_list,subject,message)
-            # return render(request,'success.html')
-        except Exception as e:
-            print(e)
-            return render(request,'error.html')
-    
-    # return render(request,'error.html')
-    
-    
-    
-    return render(request,'error.html')
+            send_mail(
+                "Appreciation for feedback",
+                "Demo Email",
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+        except Exception:
+            logger.exception("Failed to send demo email to %s", email)
+            return render(request, "error.html")
+
+    return render(request, "error.html")
+
 
 def download(request, uid):
-    cloud_name = settings.CLOUDINARY_STORAGE['CLOUD_NAME']
-    zip_url = f"https://res.cloudinary.com/{cloud_name}/raw/upload/zips/{uid}.zip"
-    return render(request, 'download.html', context={'uid': uid, 'zip_url': zip_url})
+    folder = get_object_or_404(Folder, uid=uid)
+    return render(
+        request,
+        "download.html",
+        context={"uid": folder.uid, "zip_url": folder.zip_url},
+    )
+
 
 class Handle_Uploaded_Files(APIView):
     parser_classes = [MultiPartParser]
-    def post(self , request):
-        try:
-            data = request.data
 
-            serializer = FileListSerializer(data = data)
-        
-            if serializer.is_valid():
-                serializer.save()
-                return Response({
-                    'status' : 200,
-                    'message' : 'files uploaded successfully',
-                    'data' : serializer.data
-                })
-            
-            return Response({
-                'status' : 400,
-                'message' : 'something went wrong',
-                'data'  : serializer.errors
-            })
-        except Exception as e:
-            print(e)
+    def post(self, request):
+        serializer = FileListSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                payload = serializer.save()
+            except Exception:
+                logger.exception("Upload pipeline failed")
+                return Response(
+                    {
+                        "status": 500,
+                        "message": "We could not finish creating your download bundle.",
+                        "data": {},
+                    },
+                    status=status.HTTP_502_BAD_GATEWAY,
+                )
 
+            return Response(
+                {
+                    "status": 200,
+                    "message": "Files uploaded successfully.",
+                    "data": payload,
+                },
+                status=status.HTTP_201_CREATED,
+            )
 
-        
-    
-    # def get(self,request):
-        
-    #     try:
-    #         # print(data)
-    #         return Response({
-    #             "status":200,
-    #             "message":"success"
-    #         })
-    #     except Exception as e:
-    #         print(e)
-                
-            
-            
+        return Response(
+            {
+                "status": 400,
+                "message": "Upload failed.",
+                "data": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
