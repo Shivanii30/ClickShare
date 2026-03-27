@@ -1,6 +1,8 @@
-# ClickShare
+# SwiftShare
 
-ClickShare is a **real-time file sharing web application** built using Django and WebSockets. It allows users to upload and share files, while other connected users receive updates instantly without refreshing the page.
+SwiftShare is a **real-time file sharing web application** built using Django and WebSockets. It allows users to upload and share files, while other connected users receive updates instantly without refreshing the page.
+
+Live Link : https://prod-clickshare-production.up.railway.app/ 
 
 ---
 
